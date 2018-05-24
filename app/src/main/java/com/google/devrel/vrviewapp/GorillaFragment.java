@@ -213,8 +213,10 @@ public class GorillaFragment extends Fragment {
         if (isVisibleToUser) {
             try {
                 if (videoWidgetView.getDuration() <= 0) {
-                    videoWidgetView.loadVideoFromAsset("congo_2048.mp4",
-                            new VrVideoView.Options());
+                    VrVideoView.Options op = new VrVideoView.Options();
+                    op.inputType = VrVideoView.Options.FORMAT_HLS;
+                    videoWidgetView.loadVideoFromAsset("SPECTACULAR  360 Board Lap with HUD.mp4",
+                            op);
                 }
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "Error opening video: " + e.getMessage(), Toast.LENGTH_LONG)
