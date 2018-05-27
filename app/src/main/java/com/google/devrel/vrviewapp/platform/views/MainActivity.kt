@@ -1,13 +1,10 @@
 package com.google.devrel.vrviewapp.platform.views
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentStatePagerAdapter
-import com.google.devrel.vrviewapp.GorillaFragment
 import com.google.devrel.vrviewapp.R
-import com.google.devrel.vrviewapp.WelcomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -15,7 +12,8 @@ import kotlinx.android.synthetic.main.activity_main.*
  */
 
 class MainActivity : BaseActivity() {
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setSupportActionBar(toolBar)
 
@@ -26,8 +24,8 @@ class MainActivity : BaseActivity() {
         pager.adapter = object : FragmentStatePagerAdapter(supportFragmentManager) {
             override fun getItem(position: Int): Fragment? {
                 when (position) {
-                    0 -> return WelcomeFragment()
-                    1 -> return GorillaFragment()
+                    0 -> return PanoramicFragment()
+                    1 -> return VrVideoViewFragment()
                 }
                 return null
             }

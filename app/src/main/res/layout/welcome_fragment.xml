@@ -29,7 +29,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <com.google.vr.sdk.widgets.pano.VrPanoramaView
-        android:id="@+id/pano_view"
+        android:id="@+id/panoView"
         android:layout_weight="5"
         android:layout_height="0dp"
         android:layout_margin="5dip"
