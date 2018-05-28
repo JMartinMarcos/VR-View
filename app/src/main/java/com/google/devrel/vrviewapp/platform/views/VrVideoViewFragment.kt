@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
 import com.google.devrel.vrviewapp.R
+import com.google.devrel.vrviewapp.platform.VrApp
+import com.google.devrel.vrviewapp.presentation.presenters.IPanoramicPresenter
 import com.google.devrel.vrviewapp.presentation.presenters.IVrVideoViewPresenter
 import com.google.devrel.vrviewapp.presentation.presenters.VrVideoViewPresenter
 import com.google.devrel.vrviewapp.presentation.views.IVrVideoView
@@ -15,6 +17,7 @@ import com.google.vr.sdk.widgets.video.VrVideoEventListener
 import com.google.vr.sdk.widgets.video.VrVideoView
 import kotlinx.android.synthetic.main.vr_video_fragment.*
 import java.util.*
+import javax.inject.Inject
 
 
 /**
@@ -22,7 +25,10 @@ import java.util.*
  */
 class VrVideoViewFragment: BaseFragment(), IVrVideoView{
 
+/*
     private val mPresenter : IVrVideoViewPresenter = VrVideoViewPresenter(this)
+*/
+    @Inject lateinit var mPresenter: IVrVideoViewPresenter
 
     private val TAG = "VrVideoViewFragment"
 
@@ -44,10 +50,9 @@ class VrVideoViewFragment: BaseFragment(), IVrVideoView{
 
     override fun getLayoutId() = R.layout.vr_video_fragment
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        injectDependencies()
         // initialize based on the saved state
         if (savedInstanceState != null) {
             val progressTime = savedInstanceState.getLong(STATE_PROGRESS_TIME)
@@ -131,6 +136,11 @@ class VrVideoViewFragment: BaseFragment(), IVrVideoView{
             }
 
         })
+    }
+
+    private fun injectDependencies() {
+        val app = activity as VrApp
+        app.vrComponent.inject(this)
     }
 
     private fun updateStatusText() {

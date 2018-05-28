@@ -2,14 +2,17 @@ package com.google.devrel.vrviewapp.platform.views
 
 import android.os.Bundle
 import com.google.devrel.vrviewapp.R
+import com.google.devrel.vrviewapp.app
+import com.google.devrel.vrviewapp.di.subcomponents.PanoramicModule
 import com.google.devrel.vrviewapp.loadLocalImage
+import com.google.devrel.vrviewapp.platform.VrApp
 import com.google.devrel.vrviewapp.presentation.presenters.IPanoramicPresenter
-import com.google.devrel.vrviewapp.presentation.presenters.PanoramicPresenter
 import com.google.devrel.vrviewapp.presentation.views.IPanoramicView
 import com.google.vr.sdk.widgets.pano.VrPanoramaView
 import kotlinx.android.synthetic.main.welcome_fragment.*
 import kotlinx.coroutines.experimental.runBlocking
 import java.io.InputStream
+import javax.inject.Inject
 
 
 /**
@@ -17,12 +20,16 @@ import java.io.InputStream
  */
 class PanoramicFragment : BaseFragment(), IPanoramicView {
 
-    private val presenter: IPanoramicPresenter = PanoramicPresenter(this)
+
+//    private val presenter: IPanoramicPresenter = PanoramicPresenter(this)
+
+    @Inject lateinit var presenter: IPanoramicPresenter
 
     override fun getLayoutId() = R.layout.welcome_fragment
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        injectDependencies()
         presenter.init()
     }
 
@@ -33,6 +40,11 @@ class PanoramicFragment : BaseFragment(), IPanoramicView {
             viewOptions.inputType = VrPanoramaView.Options.TYPE_MONO
             runBlocking { panoView.loadLocalImage(inputStream, viewOptions) }
         }
+    }
+
+    private fun injectDependencies() {
+        val app = activity as VrApp
+        app.panoramicComponent.inject(this)
     }
 
     override fun onPause() {

@@ -1,5 +1,6 @@
 package com.google.devrel.vrviewapp
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.AssetManager
 import android.graphics.Bitmap
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import com.google.devrel.vrviewapp.platform.VrApp
 import com.google.vr.sdk.widgets.pano.VrPanoramaView
 import com.google.vr.sdk.widgets.video.VrVideoView
 import com.google.vr.sdk.widgets.video.deps.it
@@ -16,6 +18,11 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
 import java.io.InputStream
+
+
+
+val Activity.app: VrApp
+    get() = application as VrApp
 
 fun <T> coroutine(function: () -> T): Deferred<T> {
     return async(CommonPool) { function() }
