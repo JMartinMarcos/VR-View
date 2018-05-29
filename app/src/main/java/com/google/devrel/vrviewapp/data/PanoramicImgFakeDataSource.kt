@@ -14,5 +14,17 @@ class PanoramicImgFakeDataSource : DataSourcePn{
 
     private val panoramic : PanoramicImg = PanoramicImg(url,loremIpsum)
 
-    override fun providePanoramic(): PanoramicImg = panoramic
+    override fun getPanoramic(): PanoramicImg {
+        simulateDelay()
+        return panoramic
+    }
+
+    private fun simulateDelay() {
+        try {
+            Thread.sleep(2000)
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+
+    }
 }

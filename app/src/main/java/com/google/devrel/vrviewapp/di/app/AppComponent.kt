@@ -8,11 +8,12 @@ import javax.inject.Singleton
 /**
  * Created by Jorge MM on 28/5/18.
  */
+
 @Singleton
-@Component(modules = arrayOf(AppModule::class))
+@Component(modules = [(AppModule::class)])
 interface AppComponent {
 
-    fun inject(app: VrApp)
+    fun inject(vrApp: VrApp)
 
 /*    fun plus(panoramicFragment: PanoramicFragment): PanoramicComponent
 

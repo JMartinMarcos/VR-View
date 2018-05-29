@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
 import com.google.devrel.vrviewapp.R
+import com.google.devrel.vrviewapp.app
 import com.google.devrel.vrviewapp.platform.VrApp
 import com.google.devrel.vrviewapp.presentation.presenters.IPanoramicPresenter
 import com.google.devrel.vrviewapp.presentation.presenters.IVrVideoViewPresenter
@@ -16,6 +17,8 @@ import com.google.devrel.vrviewapp.presentation.views.IVrVideoView
 import com.google.vr.sdk.widgets.video.VrVideoEventListener
 import com.google.vr.sdk.widgets.video.VrVideoView
 import kotlinx.android.synthetic.main.vr_video_fragment.*
+import org.jetbrains.anko.support.v4.act
+import org.jetbrains.anko.support.v4.toast
 import java.util.*
 import javax.inject.Inject
 
@@ -25,9 +28,7 @@ import javax.inject.Inject
  */
 class VrVideoViewFragment: BaseFragment(), IVrVideoView{
 
-/*
-    private val mPresenter : IVrVideoViewPresenter = VrVideoViewPresenter(this)
-*/
+
     @Inject lateinit var mPresenter: IVrVideoViewPresenter
 
     private val TAG = "VrVideoViewFragment"
@@ -50,9 +51,14 @@ class VrVideoViewFragment: BaseFragment(), IVrVideoView{
 
     override fun getLayoutId() = R.layout.vr_video_fragment
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        injectDependencies()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        injectDependencies()
+
         // initialize based on the saved state
         if (savedInstanceState != null) {
             val progressTime = savedInstanceState.getLong(STATE_PROGRESS_TIME)
@@ -86,7 +92,7 @@ class VrVideoViewFragment: BaseFragment(), IVrVideoView{
                 // ignore for now.
             }
         })
-        // initialize the video listener
+
         videoView.setEventListener(object : VrVideoEventListener() {
             /**
              * Called by video widget on the UI thread when it's done loading the video.
@@ -102,9 +108,7 @@ class VrVideoViewFragment: BaseFragment(), IVrVideoView{
              * Called by video widget on the UI thread on any asynchronous error.
              */
             override fun onLoadError(errorMessage: String?) {
-                Toast.makeText(
-                        activity, "Error loading video: " + errorMessage!!, Toast.LENGTH_LONG)
-                        .show()
+                toast("Error loading video: " + errorMessage!!)
                 Log.e(TAG, "Error loading video: $errorMessage")
             }
 
@@ -139,8 +143,7 @@ class VrVideoViewFragment: BaseFragment(), IVrVideoView{
     }
 
     private fun injectDependencies() {
-        val app = activity as VrApp
-        app.vrComponent.inject(this)
+        activity?.app?.getVrComponent(this)?.inject(this)
     }
 
     private fun updateStatusText() {
@@ -188,13 +191,10 @@ class VrVideoViewFragment: BaseFragment(), IVrVideoView{
         if (isVisibleToUser) {
             try {
                 if (videoView.duration <= 0) {
-                    val op = VrVideoView.Options()
-                    op.inputType = VrVideoView.Options.FORMAT_HLS
-                    videoView.loadVideoFromAsset(mPresenter.getVrVideoViewAsset(),op)
+                    mPresenter.loadVrVideoView()
                 }
             } catch (e: Exception) {
-                Toast.makeText(activity, "Error opening video: " + e.message, Toast.LENGTH_LONG)
-                        .show()
+                toast("Error opening video: " + e.message)
             }
 
         } else {
@@ -203,6 +203,12 @@ class VrVideoViewFragment: BaseFragment(), IVrVideoView{
                 videoView.pauseVideo()
             }
         }
+    }
+
+    override fun loadVrVideoView(assets : String){
+        val op = VrVideoView.Options()
+        op.inputType = VrVideoView.Options.FORMAT_HLS
+        videoView.loadVideoFromAsset(assets,op)
     }
 
 }

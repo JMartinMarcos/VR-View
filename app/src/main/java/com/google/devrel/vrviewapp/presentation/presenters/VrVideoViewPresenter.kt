@@ -1,5 +1,6 @@
 package com.google.devrel.vrviewapp.presentation.presenters
 
+import android.util.Log
 import com.google.devrel.vrviewapp.data.VrVideoFakeDataSource
 import com.google.devrel.vrviewapp.domain.interactor.GetVrVideoUseCase
 import com.google.devrel.vrviewapp.presentation.views.IVrVideoView
@@ -9,7 +10,14 @@ import kotlinx.coroutines.experimental.runBlocking
 /**
  * Created by Jorge MM on 28/5/18.
  */
-class VrVideoViewPresenter(private val view : IVrVideoView ) : IVrVideoViewPresenter{
+class VrVideoViewPresenter(private val view : IVrVideoView,
+                           private val getVrVideoUseCase: GetVrVideoUseCase) : IVrVideoViewPresenter{
 
-    override fun getVrVideoViewAsset(): String =  runBlocking { GetVrVideoUseCase(VrVideoFakeDataSource()).execute().url ?: ""}
+    private val TAG = "VrVideoViewFragment"
+
+    override fun loadVrVideoView() {
+        getVrVideoUseCase.execute(
+                onVrVideoLoaded = { view.loadVrVideoView(it.url ?: "NO JODAS") },
+                onConnectionError = { Log.e(TAG, "Error loading VrVideoView") },
+                onDataNotFoundError = {Log.e(TAG, "Connection Error") })    }
 }

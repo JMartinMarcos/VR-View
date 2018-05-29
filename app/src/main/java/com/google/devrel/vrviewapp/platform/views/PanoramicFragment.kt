@@ -1,9 +1,9 @@
 package com.google.devrel.vrviewapp.platform.views
 
+import android.content.Context
 import android.os.Bundle
 import com.google.devrel.vrviewapp.R
 import com.google.devrel.vrviewapp.app
-import com.google.devrel.vrviewapp.di.subcomponents.PanoramicModule
 import com.google.devrel.vrviewapp.loadLocalImage
 import com.google.devrel.vrviewapp.platform.VrApp
 import com.google.devrel.vrviewapp.presentation.presenters.IPanoramicPresenter
@@ -20,10 +20,9 @@ import javax.inject.Inject
  */
 class PanoramicFragment : BaseFragment(), IPanoramicView {
 
-
-//    private val presenter: IPanoramicPresenter = PanoramicPresenter(this)
-
     @Inject lateinit var presenter: IPanoramicPresenter
+
+    @Inject lateinit var Appcontext: Context
 
     override fun getLayoutId() = R.layout.welcome_fragment
 
@@ -34,7 +33,7 @@ class PanoramicFragment : BaseFragment(), IPanoramicView {
     }
 
     override fun loadPanoImage(assetName: String) {
-        val inputStream: InputStream? = context?.assets?.open(assetName)
+        val inputStream: InputStream? = Appcontext.assets.open(assetName)
         if (inputStream != null) {
             val viewOptions = VrPanoramaView.Options()
             viewOptions.inputType = VrPanoramaView.Options.TYPE_MONO
@@ -43,8 +42,7 @@ class PanoramicFragment : BaseFragment(), IPanoramicView {
     }
 
     private fun injectDependencies() {
-        val app = activity as VrApp
-        app.panoramicComponent.inject(this)
+        activity?.app?.getPanoramicComponent(this)?.inject(this)
     }
 
     override fun onPause() {

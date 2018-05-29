@@ -12,8 +12,18 @@ class VrVideoFakeDataSource : DataSourceVr{
 
     val name = "SPECTACULAR  360 Board Lap with HUD.mp4"
 
-    val vr : VrVideo = VrVideo(name, loremIpsum)
+    private val vr : VrVideo = VrVideo(name, loremIpsum)
 
-    override fun provideVrVideo(): VrVideo = vr
+    override fun getVrVideo(): VrVideo {
+        simulateDelay()
+        return vr
+    }
 
+    private fun simulateDelay() {
+        try {
+            Thread.sleep(2000)
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+    }
 }
