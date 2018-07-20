@@ -23,5 +23,6 @@ class PanoramicModule {
 
     @ActivityLife
     @Provides
-    fun providePresenter(getPanoramicUseCase: GetPanoramicUseCase): IPanoramicPresenter = PanoramicPresenter(panoramicFragment, getPanoramicUseCase)
+    fun providePresenter(getPanoramicUseCase: GetPanoramicUseCase): IPanoramicPresenter
+            = PanoramicPresenter(panoramicFragment, getPanoramicUseCase)
 }

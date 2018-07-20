@@ -23,5 +23,6 @@ class VrModule {
 
     @ActivityLife
     @Provides
-    fun providePresenter(getVrVideoUseCase: GetVrVideoUseCase) : IVrVideoViewPresenter = VrVideoViewPresenter(vrVideoViewFragment,getVrVideoUseCase)
+    fun providePresenter(getVrVideoUseCase: GetVrVideoUseCase) : IVrVideoViewPresenter
+            = VrVideoViewPresenter(vrVideoViewFragment,getVrVideoUseCase)
 }
